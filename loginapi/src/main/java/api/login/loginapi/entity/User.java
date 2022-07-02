@@ -1,11 +1,12 @@
 package api.login.loginapi.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Optional;
 
-@Getter
+@Getter @Setter
 @Entity
 @Table(name = "user")
 public class User {
