@@ -1,48 +1,45 @@
 package api.login.loginapi.controller;
 
-<<<<<<< HEAD
 import api.login.loginapi.entity.User;
-import api.login.loginapi.repository.UserRepository;
+import api.login.loginapi.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 @Slf4j
 @RequiredArgsConstructor
 public class RegisterController {
 
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
+    private final RegisterService registerService;
 
     @PostMapping("/register")
-    String registerUser(@ModelAttribute User user){
-
-        userRepository.insertMember(user);
-        log.info("uid={}, id={}, pw={}, nickname={}", user.getUid(), user.getId(), user.getPw(), user.getNickname());
-        return "";
+    String registerUser(@ModelAttribute User user) {
+        registerService.registerUser(user);
+        return "register clear\nUser inform:\nid="+user.getId()+" nickname="+user.getNickname();
     }
 
     @GetMapping()
-    List<User> showAllUsers(){
-        log.info("users={}", userRepository.getAll());
-        return userRepository.getAll();
+    List<User> showAllUsers() {
+
+        return registerService.showUsers();
     }
-=======
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
-public class RegisterController {
+    @GetMapping("/{userId}")
+    List<User> showOneUser(@PathVariable("userId") String id){
 
-    @PostMapping("/register")
-    String registerUser(){
+        return registerService.showOne(id);
+    }
 
+    @DeleteMapping("/{id}")
+    String deleteUser(@PathVariable("id") Long uid){
+
+        registerService.deleteUser(uid);
         return "";
     }
->>>>>>> origin/master
+
 }

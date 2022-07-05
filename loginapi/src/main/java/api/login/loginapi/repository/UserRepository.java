@@ -1,52 +1,60 @@
 package api.login.loginapi.repository;
 
-<<<<<<< HEAD
+
 import api.login.loginapi.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class UserRepository {
     private final EntityManager em;
 
-    @Transactional
-    public void insertMember(User user){
+    public void insertMember(User user) {
 
         em.persist(user);
     }
 
-    public List getAll(){
+    public List<User> getAll() {
 
-        List result = em.createQuery("select id from User")
+        return em.createQuery("select u from User u", User.class)
                 .getResultList();
-
-        return result;
     }
 
-    public void deleteMember(User user){
-        em.remove(user);
+    public List<User> getById(String id) {
+
+        String jpql = "select u from User as u where u.id = :id";
+
+        return em.createQuery(jpql, User.class)
+                .setParameter("id", id)
+                .getResultList();
     }
-=======
-import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+    public void deleteMember(Long uid) {
 
-@Repository
-public class UserRepository {
+        String jpql = "delete from User as u where u.uid = :uid";
+        Query query = em.createQuery(jpql, User.class)
+                .setParameter("uid", uid);
 
-    EntityManager em = new EntityManagerFactory() {
-        @Override
-        public EntityManager createEntityManager() {
-            return null;
-        }
-    };
+        query.executeUpdate();
+
+        //em.remove(user);
+    }
 
 
->>>>>>> origin/master
+    public User findUser(String id, String pw) {
+        String jpql = "select u from User as u where u.id = :id and u.pw = :pw";
+
+        return em.createQuery(jpql, User.class)
+                .setParameter("id", id)
+                .setParameter("pw", pw)
+                .getSingleResult();
+    }
+
 }
